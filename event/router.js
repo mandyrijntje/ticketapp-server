@@ -1,6 +1,7 @@
 const express = require("express");
 
 const Event = require("./model");
+const Ticket = require("../ticket/model")
 
 const { Router } = express;
 
@@ -20,12 +21,7 @@ router.get("/events", async (request, response, next) => {
 router.post("/events", async (request, response, next) => {
   try {
     const { name, location } = request.body;
-
-    // create an entity object
-    // that describes what I want to make
     const entity = { name, location };
-
-    // add a row to the database using a promise
     const event = await Event.create(entity);
     response.send(event);
   } catch (error) {
@@ -35,7 +31,6 @@ router.post("/events", async (request, response, next) => {
 
 // get one event
 router.get(
-  // path with an id parameter
   async (request, response, next) => {
     try {
       const { id } = request.params;
@@ -52,7 +47,6 @@ router.put("/events/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
     const event = await event.findByPk(id);
-
     console.log("request.body test:", request.body);
     console.log("event test:", event.dataValues);
     const updated = await event.update(request.body);
@@ -62,23 +56,39 @@ router.put("/events/:id", async (request, response, next) => {
   }
 });
 
-router.delete("/events/:id", async (req, res, next) => {
+// get all events
+router.delete("/events/:id", async (request, response, next) => {
   try {
-    const eventToDelete = await Event.destroy({ where: { id: req.body.id } });
-    res.json(eventToDelete);
+    const eventToDelete = await Event.destroy({ where: { id: request.body.id } });
+    response.json(eventToDelete);
   } catch (error) {
     next(error);
   }
 });
-router.get("/events/user/:id", async (req, res, next) => {
+
+// get all events
+router.get("/events/user/:id", async (request, response, next) => {
   try {
     const eventsByUser = await Event.findAll({
       where: { userId: req.params.id }
     });
-    res.json(eventsByUser);
+    response.json(eventsByUser);
   } catch (error) {
     next(error);
   }
 });
+
+// get all tickets for a specific event
+router.get("event/:id/ticket", async (request, response, next) => {
+  try {
+    const ticket = await Ticket.findAll({
+      where: { eventId: request.params.id }
+    });
+    response.send(ticket);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 module.exports = router;
