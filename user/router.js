@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("./model");
-const Image = require("../image/model");
+const Event = require("../event/model");
 const { toJWT, toData } = require("../auth/jwt");
 
 const router = express.Router();
@@ -33,7 +33,7 @@ router.post("/users", async (req, res, next) => {
 
 router.get("/users", async (req, res, next) => {
   try {
-    const showUsers = await User.findAll({ include: [Image] });
+    const showUsers = await User.findAll({ include: [Event] });
     console.log(showUsers);
     res.send(showUsers);
   } catch (error) {
@@ -42,7 +42,7 @@ router.get("/users", async (req, res, next) => {
 });
 
 router.get("/users/:userId", (req, res, next) => {
-  User.findByPk(req.params.userId, { include: [Image] })
+  User.findByPk(req.params.userId, { include: [Event] })
     .then(user => {
       if (!user) {
         res.status(404).end();

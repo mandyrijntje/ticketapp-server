@@ -1,5 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const eventRouter = require("./event/router");
+const authRouter = require("./auth/router");
+const userRouter = require("./user/router");
 
 const app = express();
 const corsMiddleware = cors();
