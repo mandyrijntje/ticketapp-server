@@ -4,14 +4,16 @@ const User = require ("../user/model")
 const Sequelize = require("sequelize");
 
 const Ticket = db.define("ticket", {
+  picture: {
+    type: Sequelize.STRING,
+  },
   price: {
     type: Sequelize.INTEGER,
     allowNull: false
   },
-  sold: {
-    type: Sequelize.BOOLEAN,
+  description: {
+    type: Sequelize.TEXT,
     allowNull: false,
-    defaultValue: false
   }
 });
 

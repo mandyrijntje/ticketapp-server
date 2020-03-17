@@ -6,12 +6,27 @@ const Event = db.define("event", {
     type: Sequelize.STRING,
     allowNull: false
   },
-  date: {
+  description: {
+    type: Sequelize.TEXT,
+    allowNull: false
+  },
+  picture: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  startDate: {
     type: Sequelize.DATE,
     allowNull: false,
     defaultValue: Sequelize.NOW
   },
-  description: Sequelize.TEXT
+  endDate: {
+    type: Sequelize.DATE,
+    allowNull: false,
+    defaultValue: Sequelize.NOW
+  }
+},{
+  timestamps: false,
+  tableName: "events"
 });
 
 module.exports = Event;
