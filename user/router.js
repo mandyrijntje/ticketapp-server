@@ -13,7 +13,6 @@ router.post("/users", async (request, response, next) => {
   try {
     const userCredentials = {
       email: request.body.email,
-      username: request.body.username,
       password: bcrypt.hashSync(request.body.password, 10)
     };
     if (!userCredentials.email || !userCredentials.password) {
@@ -26,7 +25,7 @@ router.post("/users", async (request, response, next) => {
       response.send({
         jwt,
         id: createUser.id,
-        username: createUser.username
+        email: createUser.email
       });
     }
   } catch (error) {

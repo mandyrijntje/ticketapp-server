@@ -1,6 +1,7 @@
 const express = require("express");
 const auth = require("../auth/middleware");
 const Ticket = require("./model");
+const Event = require("../event/model");
 
 const { Router } = express;
 
