@@ -4,7 +4,6 @@ const Ticket = require("./model");
 const Event = require("../event/model");
 
 const { Router } = express;
-
 const router = Router();
 
 // post a ticket for a specific event

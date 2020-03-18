@@ -36,7 +36,16 @@ router.post("/users", async (request, response, next) => {
 //get all users
 router.get("/users", async (request, response, next) => {
   try {
-    const showUsers = await User.findAll({ include: [Event][Ticket] });
+    const showUsers = await User.findAll({
+      include: [
+        {
+          model: Event
+        },
+        {
+          model: Ticket
+        }
+      ]
+    });
     console.log(showUsers);
     response.send(showUsers);
   } catch (error) {
@@ -46,7 +55,16 @@ router.get("/users", async (request, response, next) => {
 
 //get one user
 router.get("/users/:userId", (request, response, next) => {
-  User.findByPk(request.params.userId, { include: [Event][Ticket] })
+  User.findByPk(request.params.userId, {
+    include: [
+      {
+        model: Event
+      },
+      {
+        model: Ticket
+      }
+    ]
+  })
     .then(user => {
       if (!user) {
         response.status(404).end();

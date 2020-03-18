@@ -1,16 +1,16 @@
 const express = require("express");
 
 const Event = require("./model");
-const Ticket = require("../ticket/model")
+const Ticket = require("../ticket/model");
 
 const { Router } = express;
 
 const router = Router();
 
 // get all events
-router.get("/events", async (request, response, next) => {
+router.get("/event", async (request, response, next) => {
   try {
-    const events = await Event.findAll();
+    const events = await Event.findAll({ include: [{ model: Ticket }] });
     response.send(events);
   } catch (error) {
     next(error);
@@ -18,10 +18,10 @@ router.get("/events", async (request, response, next) => {
 });
 
 // post an event
-router.post("/events", async (request, response, next) => {
+router.post("/event", async (request, response, next) => {
   try {
-    const { name, location } = request.body;
-    const entity = { name, location };
+    const { name, description, picture, startDate, endDate } = request.body;
+    const entity = { name, description, picture, startDate, endDate };
     const event = await Event.create(entity);
     response.send(event);
   } catch (error) {
@@ -30,20 +30,18 @@ router.post("/events", async (request, response, next) => {
 });
 
 // get one event
-router.get(
-  async (request, response, next) => {
-    try {
-      const { id } = request.params;
-      const event = await Event.findByPk(id);
-      response.send(event);
-    } catch (error) {
-      next(error);
-    }
+router.get(async (request, response, next) => {
+  try {
+    const { id } = request.params;
+    const event = await Event.findByPk(id, { include: [{ model: Ticket }] });
+    response.send(event);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 //update an event
-router.put("/events/:id", async (request, response, next) => {
+router.put("/event/:id", async (request, response, next) => {
   try {
     const { id } = request.params;
     const event = await event.findByPk(id);
@@ -57,9 +55,11 @@ router.put("/events/:id", async (request, response, next) => {
 });
 
 // get all events
-router.delete("/events/:id", async (request, response, next) => {
+router.delete("/event/:id", async (request, response, next) => {
   try {
-    const eventToDelete = await Event.destroy({ where: { id: request.body.id } });
+    const eventToDelete = await Event.destroy({
+      where: { id: request.body.id }
+    });
     response.json(eventToDelete);
   } catch (error) {
     next(error);
@@ -67,7 +67,7 @@ router.delete("/events/:id", async (request, response, next) => {
 });
 
 // get all events
-router.get("/events/user/:id", async (request, response, next) => {
+router.get("/event/user/:id", async (request, response, next) => {
   try {
     const eventsByUser = await Event.findAll({
       where: { userId: req.params.id }
@@ -89,6 +89,5 @@ router.get("event/:id/ticket", async (request, response, next) => {
     next(error);
   }
 });
-
 
 module.exports = router;
