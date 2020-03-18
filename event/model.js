@@ -23,9 +23,6 @@ const Event = db.define("event", {
     type: Sequelize.DATEONLY,
     allowNull: false,
   }
-},{
-  timestamps: false,
-  tableName: "events"
 });
 
 Event.belongsTo(User)

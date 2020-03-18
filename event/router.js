@@ -8,10 +8,15 @@ const { Router } = express;
 const router = Router();
 
 // get all events
-router.get("/event", async (request, response, next) => {
+router.get("/event", (request, response, next) => {
+  const limit = Math.min(request.query.limit || 9, 20);
+  const offset = request.query.offset || 0;
   try {
-    const events = await Event.findAll({ include: [{ model: Ticket }] });
-    response.send(events);
+    Event.findAndCountAll({
+      limit,
+      offset
+    }).then(result=>response.send({ events: result.rows, total: result.count }))
+    
   } catch (error) {
     next(error);
   }

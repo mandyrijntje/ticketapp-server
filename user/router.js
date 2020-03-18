@@ -46,7 +46,6 @@ router.get("/users", async (request, response, next) => {
         }
       ]
     });
-    console.log(showUsers);
     response.send(showUsers);
   } catch (error) {
     next(error);
@@ -85,7 +84,7 @@ router.get("/users/:userId/ticket", (request, response, next) => {
 });
 
 // Delete all user's tickets
-router.delete("/users/:userId/tasks", auth, (request, response, next) => {
+router.delete("/users/:userId/ticket", auth, (request, response, next) => {
   Ticket.destroy({
     where: {
       userId: request.params.userId
