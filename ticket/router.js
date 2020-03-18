@@ -6,24 +6,25 @@ const Event = require("../event/model");
 const { Router } = express;
 const router = Router();
 
+
 // get all tickets
-router.get("/ticket", async (request, response, next) => {
+router.get("/ticket", (request, response, next) => {
   const limit = Math.min(request.query.limit || 9, 20);
   const offset = request.query.offset || 0;
   try {
     Ticket.findAndCountAll({
       limit,
       offset
-    });
-    response.send({ tickets: response.rows, total: response.count });
+    }).then(result=>response.send({ tickets: result.rows, total: result.count }))
+    
   } catch (error) {
     next(error);
   }
 });
 
 // post a ticket for a specific event
-router.post("/ticket", auth, async (request, response, next) => {
-  Event.findByPk(request.body.eventId)
+router.post("/event/:eventId/ticket", auth, async (request, response, next) => {
+  Event.findByPk(request.params.eventId)
     .then(event => {
       if (!event) {
         response.status(404).end();
