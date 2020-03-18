@@ -1,5 +1,6 @@
 const db = require("../db");
 const Sequelize = require("sequelize");
+const User = require ("../user/model")
 
 const Event = db.define("event", {
   name: {
@@ -26,5 +27,9 @@ const Event = db.define("event", {
   timestamps: false,
   tableName: "events"
 });
+
+Event.belongsTo(User)
+
+User.hasMany(Event)
 
 module.exports = Event;
