@@ -1,8 +1,6 @@
 const express = require("express");
 const auth = require("../auth/middleware");
 const Ticket = require("./model");
-const Event = require("../event/model");
-const User = require("../user/model");
 const Comment = require("../comment/model");
 
 const { Router } = express;
@@ -34,7 +32,7 @@ router.get("/ticket/:ticketId/comment", (request, response, next) => {
 });
 
 // post a comment for a specific ticket
-router.post("/ticket/:ticketId/comment", async (request, response, next) => {
+router.post("/ticket/:ticketId/comment", auth, async (request, response, next) => {
   Ticket.findByPk(request.params.ticketId)
     .then(ticket => {
       if (!ticket) {

@@ -4,6 +4,7 @@ const auth = require("../auth/middleware");
 const User = require("./model");
 const Ticket = require("../ticket/model");
 const Event = require("../event/model");
+const Comment = require("../comment/model");
 const { toJWT, toData } = require("../auth/jwt");
 
 const router = express.Router();
@@ -43,6 +44,9 @@ router.get("/users", async (request, response, next) => {
         },
         {
           model: Ticket
+        },
+        {
+          model: Comment
         }
       ]
     });
@@ -61,6 +65,9 @@ router.get("/users/:userId", (request, response, next) => {
       },
       {
         model: Ticket
+      },
+      {
+        model: Comment
       }
     ]
   })
