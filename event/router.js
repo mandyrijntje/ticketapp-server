@@ -51,8 +51,6 @@ router.put("/event/:id", auth, async (request, response, next) => {
   try {
     const { id } = request.params;
     const event = await event.findByPk(id);
-    console.log("request.body test:", request.body);
-    console.log("event test:", event.dataValues);
     const updated = await event.update(request.body);
     response.send(updated);
   } catch (error) {
@@ -91,19 +89,18 @@ router.post("/event/:eventId/ticket", auth, async (request, response, next) => {
 });
 
 // get all tickets for a specific event
-router.get("event/:eventId/ticket", async (request, response, next) => {
-  const limit = Math.min(request.query.limit || 9, 20);
-  const offset = request.query.offset || 0;
-  try {
-    const ticket = await Ticket.findAndCountAll({
-      limit,
-      offset,
-      where: { eventId: request.params.eventId }
-    });
-    response.send(ticket);
-  } catch (error) {
-    next(error);
-  }
+router.get("event/:eventId/ticket", (request, response, next) => {
+  // const limit = Math.min(request.query.limit || 9, 20);
+  // const offset = request.query.offset || 0;
+  Ticket.findAll({
+    // limit,
+    // offset,
+    where: { eventId: request.params.eventId }
+  })
+    .then(ticket => {
+      response.json(ticket);
+    })
+    .catch(next);
 });
 
 // get one ticket for a specific event
