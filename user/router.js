@@ -83,9 +83,31 @@ router.get("/users/:userId/ticket", (request, response, next) => {
     .catch(next);
 });
 
+// Get all user's events
+router.get("/users/:userId/event", (request, response, next) => {
+  Event.findAll({ where: { userId: request.params.userId } })
+    .then(event => {
+      response.json(event);
+    })
+    .catch(next);
+});
+
 // Delete all user's tickets
 router.delete("/users/:userId/ticket", auth, (request, response, next) => {
   Ticket.destroy({
+    where: {
+      userId: request.params.userId
+    }
+  })
+    .then(() => {
+      response.status(204).end();
+    })
+    .catch(next);
+});
+
+// Delete all user's events
+router.delete("/users/:userId/event", auth, (request, response, next) => {
+  Event.destroy({
     where: {
       userId: request.params.userId
     }
