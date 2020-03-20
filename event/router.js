@@ -89,7 +89,7 @@ router.post("/event/:eventId/ticket", auth, async (request, response, next) => {
 });
 
 // get all tickets for a specific event
-router.get("event/:eventId/ticket", (request, response, next) => {
+router.get("/event/:eventId/ticket", (request, response, next) => {
   // const limit = Math.min(request.query.limit || 9, 20);
   // const offset = request.query.offset || 0;
   Ticket.findAll({
