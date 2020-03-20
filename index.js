@@ -15,7 +15,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 app.use(corsMiddleware);
 app.use(jsonParser);
-app.use(eventRouter)
-app.use(authRouter)
-app.use(userRouter)
-app.use(ticketRouter)
+app.use(eventRouter);
+app.use(authRouter);
+app.use(userRouter);
+app.use(ticketRouter);
