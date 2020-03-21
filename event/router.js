@@ -2,6 +2,7 @@ const express = require("express");
 const auth = require("../auth/middleware");
 const Event = require("./model");
 const Ticket = require("../ticket/model");
+const { Op } = require("sequelize");
 
 const { Router } = express;
 
@@ -13,27 +14,33 @@ router.get("/event", (request, response, next) => {
   const offset = request.query.offset || 0;
   try {
     Event.findAndCountAll({
+      where: {
+        startDate: {
+          [Op.gte]: new Date()
+        }
+      },
       limit,
       offset
-    }).then(result =>
-      response.send({ events: result.rows, total: result.count })
-    );
+    }).then(result => {
+      console.log(result);
+      return response.send({ events: result.rows, total: result.count });
+    });
   } catch (error) {
     next(error);
   }
 });
 
-// post an event
-router.post("/event", auth, async (request, response, next) => {
-  try {
-    const { name, description, picture, startDate, endDate } = request.body;
-    const entity = { name, description, picture, startDate, endDate };
-    const event = await Event.create(entity);
-    response.send(event);
-  } catch (error) {
-    next(error);
-  }
-});
+// // post an event
+// router.post("/event", auth, async (request, response, next) => {
+//   try {
+//     const { name, description, picture, startDate, endDate } = request.body;
+//     const entity = { name, description, picture, startDate, endDate };
+//     const event = await Event.create(entity);
+//     response.send(event);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // get one event
 router.get("/event/:id", async (request, response, next) => {
@@ -87,6 +94,26 @@ router.post("/event/:eventId/ticket", auth, async (request, response, next) => {
     })
     .catch(next);
 });
+
+// post an ticket for user
+router.post(
+  "/users/:userId/event/:eventId/ticket",
+  auth,
+  async (request, response, next) => {
+    try {
+      const { price, description, picture, eventId, userId } = request.body;
+      const entity = { price, description, picture };
+      const event = await Event.create({
+        ...entity,
+        userId: userId,
+        eventId: eventId
+      });
+      response.send(event);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 // get all tickets for a specific event
 router.get("/event/:eventId/ticket", (request, response, next) => {

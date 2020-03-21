@@ -99,6 +99,116 @@ router.get("/users/:userId/event", (request, response, next) => {
     .catch(next);
 });
 
+// get one event for a specific user
+router.get("/users/:userId/event/:id", (request, response, next) => {
+  Event.findOne({
+    where: {
+      id: request.params.id,
+      userId: request.params.userId
+    }
+  })
+    .then(event => {
+      if (event) {
+        response.json(event);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch(next);
+});
+
+// get all tickets for one user's one event
+router.get(
+  "/users/:userId/event/:eventId/ticket",
+  (request, response, next) => {
+    Ticket.findAll({
+      where: {
+        eventId: request.params.eventId,
+        userId: request.params.userId
+      }
+    })
+      .then(ticket => {
+        if (ticket) {
+          response.json(ticket);
+        } else {
+          response.status(404).end();
+        }
+      })
+      .catch(next);
+  }
+);
+
+// get one ticket for one user's one event
+router.get(
+  "/users/:userId/event/:eventId/ticket/:ticketId",
+  (request, response, next) => {
+    Ticket.findOne({
+      where: {
+        eventId: request.params.eventId,
+        ticketId: request.params.ticketId,
+        userId: request.params.userId
+      }
+    })
+      .then(ticket => {
+        if (ticket) {
+          response.json(ticket);
+        } else {
+          response.status(404).end();
+        }
+      })
+      .catch(next);
+  }
+);
+
+// // Create a new event for a user
+// router.post("/event", auth, async (request, response, next) => {
+//   try {
+//     const {
+//       name,
+//       description,
+//       picture,
+//       startDate,
+//       endDate,
+//       userId
+//     } = request.body;
+//     const entity = { name, description, picture, startDate, endDate };
+//     const user = await User.findByPk(userId);
+//     if (!user) {
+//       response.status(404).end();
+//     } else {
+//       Event.create({
+//         ...entity,
+//         userId: request.body.userId
+//       });
+//       response.send(event);
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+// post an event for user
+router.post("/users/:userId/event", auth, async (request, response, next) => {
+  try {
+    const {
+      name,
+      description,
+      picture,
+      startDate,
+      endDate,
+      userId
+    } = request.body;
+    const entity = { name, description, picture, startDate, endDate };
+    const event = await Event.create({
+      ...entity,
+      userId: userId
+    });
+    response.send(event);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Delete all user's tickets
 router.delete("/users/:userId/ticket", auth, (request, response, next) => {
   Ticket.destroy({
