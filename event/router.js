@@ -95,25 +95,7 @@ router.post("/event/:eventId/ticket", auth, async (request, response, next) => {
     .catch(next);
 });
 
-// post an ticket for user
-router.post(
-  "/users/:userId/event/:eventId/ticket",
-  auth,
-  async (request, response, next) => {
-    try {
-      const { price, description, picture, eventId, userId } = request.body;
-      const entity = { price, description, picture };
-      const event = await Event.create({
-        ...entity,
-        userId: userId,
-        eventId: eventId
-      });
-      response.send(event);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+
 
 // get all tickets for a specific event
 router.get("/event/:eventId/ticket", (request, response, next) => {

@@ -209,6 +209,47 @@ router.post("/users/:userId/event", auth, async (request, response, next) => {
   }
 });
 
+// post an ticket for user
+router.post("/users/:userId/ticket", auth, async (request, response, next) => {
+  try {
+    const { price, description, picture, eventId, userId } = request.body;
+    const entity = { price, description, picture };
+    const ticket = await Ticket.create({
+      ...entity,
+      userId: userId,
+      eventId: eventId
+    });
+    response.send(ticket);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//create a user
+// router.post("/users", async (request, response, next) => {
+//   try {
+//     const userCredentials = {
+//       email: request.body.email,
+//       password: bcrypt.hashSync(request.body.password, 10)
+//     };
+//     if (!userCredentials.email || !userCredentials.password) {
+//       response.status(400).send({
+//         message: "Please supply a valid email and password"
+//       });
+//     } else {
+//       const createUser = await User.create(userCredentials);
+//       const jwt = toJWT({ userId: createUser.id });
+//       response.send({
+//         jwt,
+//         id: createUser.id,
+//         email: createUser.email
+//       });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
 // Delete all user's tickets
 router.delete("/users/:userId/ticket", auth, (request, response, next) => {
   Ticket.destroy({
