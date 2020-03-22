@@ -22,7 +22,7 @@ router.get("/event", (request, response, next) => {
       limit,
       offset
     }).then(result => {
-      console.log(result);
+      // console.log(result);
       return response.send({ events: result.rows, total: result.count });
     });
   } catch (error) {
