@@ -201,7 +201,7 @@ router.post("/users/:userId/event", auth, async (request, response, next) => {
     const entity = { name, description, picture, startDate, endDate };
     const event = await Event.create({
       ...entity,
-      userId: userId
+      userId: request.user.userId
     });
     response.send(event);
   } catch (error) {
@@ -216,7 +216,7 @@ router.post("/users/:userId/ticket", auth, async (request, response, next) => {
     const entity = { price, description, picture };
     const ticket = await Ticket.create({
       ...entity,
-      userId: userId,
+      userId: request.user.userId,
       eventId: eventId
     });
     response.send(ticket);

@@ -16,7 +16,7 @@ router.get("/ticket", (request, response, next) => {
       offset
     }).then(result => {
       response.send({ tickets: result.rows, total: result.count });
-      console.log(result.count);
+      // console.log(result.count);
     });
   } catch (error) {
     next(error);
